@@ -49,9 +49,9 @@ namespace MyQueue_Implementation
                         int counter = 1;
                         do
                         {
-                            Console.Write("+7");
+                            Console.Write("+");
                             string phoneNumber = Console.ReadLine();
-                            genericQueue.Enqueue(new Person(counter++, "+7" + phoneNumber));
+                            genericQueue.Enqueue(new Person(counter++, "+" + phoneNumber));
                             Console.WriteLine("Write enter to continue or ESC to exit");
                         }
                         while (Console.ReadKey().Key != ConsoleKey.Escape);
@@ -72,9 +72,9 @@ namespace MyQueue_Implementation
                         int counter = 1;
                         do
                         {
-                            Console.Write("+7");
+                            Console.Write("+");
                             string phoneNumber = Console.ReadLine();
-                            myQueue.Enqueue(new Person(counter++, "+7" + phoneNumber));
+                            myQueue.Enqueue(new Person(counter++, "+" + phoneNumber));
                             Console.WriteLine("Write enter to continue or ESC to exit");
                         }
                         while (Console.ReadKey().Key != ConsoleKey.Escape);
