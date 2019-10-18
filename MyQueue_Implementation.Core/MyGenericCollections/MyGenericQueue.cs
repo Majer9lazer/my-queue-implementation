@@ -2,16 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyQueue_Implementation.Core.MyGenericCollections
 {
     [DebuggerTypeProxy(typeof(MyGenericQueueDebugView<>))]
-    [DebuggerDisplay("Count = {Count}")]
+    [DebuggerDisplay("Count = {" + nameof(Count) + "}")]
     public class MyGenericQueue<T> : IEnumerable<T>
     {
         private T[] _array;
@@ -32,7 +29,7 @@ namespace MyQueue_Implementation.Core.MyGenericCollections
         public MyGenericQueue(int capacity)
         {
             if (capacity < 0)
-                throw new ArgumentOutOfRangeException("capacity", "размерность не должна быть меньше нуля");
+                throw new ArgumentOutOfRangeException(nameof(capacity), "размерность не должна быть меньше нуля");
 
 
             _array = new T[capacity];
@@ -44,7 +41,7 @@ namespace MyQueue_Implementation.Core.MyGenericCollections
         public MyGenericQueue(IEnumerable<T> collection)
         {
             if (collection == null)
-                throw new ArgumentNullException("collection", "коллекция не должна быть пустой");
+                throw new ArgumentNullException(nameof(collection), "коллекция не должна быть пустой");
 
             _array = new T[DefaultCapacity];
             _size = 0;
@@ -59,21 +56,20 @@ namespace MyQueue_Implementation.Core.MyGenericCollections
             }
         }
 
-        public int Count
-        {
-            get { return _size; }
-        }
+        public int Count => _size;
 
         public void Enqueue(T item)
         {
             if (_size == _array.Length)
             {
-                int newcapacity = (int)((long)_array.Length * (long)GrowFactor / 100);
-                if (newcapacity < _array.Length + MinimumGrow)
+                int newCapacity = (int)(_array.Length * (long)GrowFactor / 100);
+
+                if (newCapacity < _array.Length + MinimumGrow)
                 {
-                    newcapacity = _array.Length + MinimumGrow;
+                    newCapacity = _array.Length + MinimumGrow;
                 }
-                SetCapacity(newcapacity);
+
+                SetCapacity(newCapacity);
             }
 
             _array[_tail] = item;
@@ -81,15 +77,17 @@ namespace MyQueue_Implementation.Core.MyGenericCollections
             _size++;
             _version++;
         }
+
         public T[] GetNElements(int n)
         {
             if (n > _size)
             {
-                throw new ArgumentOutOfRangeException("n", "Количество показываемых не должно превышать длины массива");
+                throw new ArgumentOutOfRangeException(nameof(n), "Количество показываемых не должно превышать длины массива");
             }
 
             return this._array.Take(n).ToArray();
         }
+
         public void SortBy<TSource>(Func<T, TSource> func)
         {
             _array = _array.Where(w => w != null).OrderBy(func).ToArray();
@@ -100,21 +98,16 @@ namespace MyQueue_Implementation.Core.MyGenericCollections
                 throw new InvalidOperationException("Queue is empty");
 
             T removed = _array[_head];
-            _array[_head] = default(T);
+            _array[_head] = default;
             _head = (_head + 1) % _array.Length;
             _size--;
             _version++;
             return removed;
         }
-        public bool IsEmpty()
-        {
-            return Count <= 0;
-        }
 
-        public bool IsFull()
-        {
-            return this._size >= Count;
-        }
+        public bool IsEmpty() => Count <= 0;
+
+        public bool IsFull() => this._size >= Count;
 
         internal T GetElement(int i)
         {
@@ -139,45 +132,47 @@ namespace MyQueue_Implementation.Core.MyGenericCollections
 
             return arr;
         }
-        /// <include file='doc\Queue.uex' path='docs/doc[@for="Queue.IEnumerable.GetEnumerator"]/*' />
-        /// <internalonly/>
+
+        public T this[int index] => _array[index];
+
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             return new MyQueueEnumerator(this);
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return new MyQueueEnumerator(this);
         }
+
         private void SetCapacity(int capacity)
         {
-            T[] newarray = new T[capacity];
+            T[] newArray = new T[capacity];
             if (_size > 0)
             {
                 if (_head < _tail)
                 {
-                    Array.Copy(_array, _head, newarray, 0, _size);
+                    Array.Copy(_array, _head, newArray, 0, _size);
                 }
                 else
                 {
-                    Array.Copy(_array, _head, newarray, 0, _array.Length - _head);
-                    Array.Copy(_array, 0, newarray, _array.Length - _head, _tail);
+                    Array.Copy(_array, _head, newArray, 0, _array.Length - _head);
+                    Array.Copy(_array, 0, newArray, _array.Length - _head, _tail);
                 }
             }
 
-            _array = newarray;
+            _array = newArray;
             _head = 0;
             _tail = (_size == capacity) ? 0 : _size;
             _version++;
         }
+
         [Serializable]
-        public struct MyQueueEnumerator : IEnumerator<T>,
-            System.Collections.IEnumerator
+        public struct MyQueueEnumerator : IEnumerator<T>, IEnumerator
         {
-            private MyGenericQueue<T> _q;
+            private readonly MyGenericQueue<T> _q;
             private int _index;   // -1 = not started, -2 = ended/disposed
-            private int _version;
+            private readonly int _version;
             private T _currentElement;
 
             internal MyQueueEnumerator(MyGenericQueue<T> q)
@@ -185,13 +180,13 @@ namespace MyQueue_Implementation.Core.MyGenericCollections
                 _q = q;
                 _version = _q._version;
                 _index = -1;
-                _currentElement = default(T);
+                _currentElement = default;
             }
 
             public void Dispose()
             {
                 _index = -2;
-                _currentElement = default(T);
+                _currentElement = default;
             }
 
             public bool MoveNext()
@@ -207,7 +202,7 @@ namespace MyQueue_Implementation.Core.MyGenericCollections
                 if (_index == _q._size)
                 {
                     _index = -2;
-                    _currentElement = default(T);
+                    _currentElement = default;
                     return false;
                 }
 
@@ -219,33 +214,31 @@ namespace MyQueue_Implementation.Core.MyGenericCollections
             {
                 get
                 {
-                    if (_index < 0)
-                    {
-                        if (_index == -1)
-                            throw new InvalidOperationException("InvalidOperation_EnumNotStarted");
+                    if (_index >= 0)
+                        return _currentElement;
 
-                        throw new InvalidOperationException("InvalidOperation_EnumEnded");
-                    }
-                    return _currentElement;
+                    if (_index == -1)
+                        throw new InvalidOperationException("InvalidOperation_EnumNotStarted");
+
+                    throw new InvalidOperationException("InvalidOperation_EnumEnded");
                 }
             }
 
-            Object System.Collections.IEnumerator.Current
+            object IEnumerator.Current
             {
                 get
                 {
-                    if (_index < 0)
-                    {
-                        if (_index == -1)
-                            throw new InvalidOperationException("InvalidOperation_EnumNotStarted");
+                    if (_index >= 0)
+                        return _currentElement;
 
-                        throw new InvalidOperationException("InvalidOperation_EnumEnded");
-                    }
-                    return _currentElement;
+                    if (_index == -1)
+                        throw new InvalidOperationException("InvalidOperation_EnumNotStarted");
+
+                    throw new InvalidOperationException("InvalidOperation_EnumEnded");
                 }
             }
 
-            void System.Collections.IEnumerator.Reset()
+            void IEnumerator.Reset()
             {
                 if (_version != _q._version)
                     throw new InvalidOperationException("InvalidOperation_EnumFailedVersion");
@@ -256,22 +249,17 @@ namespace MyQueue_Implementation.Core.MyGenericCollections
         }
 
     }
+
     internal sealed class MyGenericQueueDebugView<T>
     {
-        private MyGenericQueue<T> queue;
+        private readonly MyGenericQueue<T> _queue;
 
         public MyGenericQueueDebugView(MyGenericQueue<T> queue)
         {
-            this.queue = queue ?? throw new ArgumentNullException("queue", "Очередь не должна быть пустой");
+            this._queue = queue ?? throw new ArgumentNullException(nameof(queue), "Очередь не должна быть пустой");
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
-        public T[] Items
-        {
-            get
-            {
-                return queue.ToArray();
-            }
-        }
+        public T[] Items => _queue.ToArray();
     }
 }

@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MyQueue_Implementation.Modeling.Interfaces;
 using MyQueue_Implementation.Modeling.MyEntities;
 
 namespace MyQueue_Implementation.Core.Generator
 {
-    public class PersonGenerator : IGenerator<Person>
+    public class PersonGenerator : IPersonGenerator
     {
         private readonly Random _rnd;
-        private const int MaxSeed = 5;
         public int PersonCount { get; set; }
         private Person[] _array;
 
@@ -20,10 +17,12 @@ namespace MyQueue_Implementation.Core.Generator
             _rnd = new Random();
             PersonCount = _rnd.Next(1, 5 + 1);
         }
+
         public PersonGenerator(int personCount)
         {
             PersonCount = personCount;
         }
+
         public Person[] GenerateArray()
         {
             _array = new Person[PersonCount];
@@ -34,24 +33,29 @@ namespace MyQueue_Implementation.Core.Generator
             return _array;
         }
 
-        private int RandomIterations()
+        public Person GenerateSingle()
         {
-            return _rnd.Next(1, MaxSeed + 1);
+            return new Person(_rnd.Next(1000), RandomNumber());
         }
 
         public Person GenerateSingle(int id)
         {
             return new Person(id, RandomNumber());
         }
+
+        public IEnumerable<Person> GenerateEnumerablePeople(int count)
+        {
+            return Enumerable.Range(1, count).Select(s => new Person(s, RandomNumber()));
+        }
+
         /// <summary>
-        /// Возвращает рандомный номер телефона по заданию
-        /// использую string.Format; чтобы не конфликтовать с legacy проектами)
+        /// Возвращает случайный номер телефона.
         /// </summary>
         /// <returns></returns>
         private string RandomNumber()
         {
             //77 777 777
-            return string.Format("{0}{1}{2}", _rnd.Next(10, 100), _rnd.Next(100, 1000), _rnd.Next(100, 1000));
+            return $"{_rnd.Next(10, 100)}{_rnd.Next(100, 1000)}{_rnd.Next(100, 1000)}";
         }
     }
 }

@@ -14,15 +14,15 @@ namespace MyQueue_Implementation.Test
         public void EnqueueTestMethod()
         {
             MyGenericQueue<Person> genericQueue = new MyGenericQueue<Person>();
-            genericQueue.Enqueue(new Person(0, "+77051648233"));
+
             genericQueue.Enqueue(new Person(1, "+77051648241"));
             genericQueue.Enqueue(new Person(2, "+77051648252"));
             genericQueue.Enqueue(new Person(3, "+77051648255"));
             genericQueue.Enqueue(new Person(4, "+77051648244"));
-
+            genericQueue.Enqueue(new Person(0, "+77051648233"));
             genericQueue.SortBy(d => d.PhoneNumber);
 
-            Assert.IsTrue(genericQueue.ToArray()[0].Id == 0, genericQueue.ToArray()[0].PhoneNumber);
+            Assert.IsTrue(genericQueue[0].Id == 0, genericQueue[0].PhoneNumber);
         }
 
         [TestMethod]
@@ -38,7 +38,7 @@ namespace MyQueue_Implementation.Test
             genericQueue.Enqueue(new Person(4, "+77051648244"));
 
             Person[] persons = genericQueue.GetNElements(input);
-            Assert.AreEqual(input, persons.Length, string.Format("persons.Length = {0}", persons.Length));
+            Assert.AreEqual(input, persons.Length, $"persons.Length = {persons.Length}");
         }
     }
 }

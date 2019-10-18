@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IGenerator.cs" />
+    <Compile Include="Interfaces\IPersonGenerator.cs" />
+    <Compile Include="Interfaces\IPhoneNumberGenerator.cs" />
     <Compile Include="MyEntities\Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

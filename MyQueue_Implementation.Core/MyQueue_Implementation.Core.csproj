@@ -41,7 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Generator\PersonGenerator.cs" />
+    <Compile Include="Generators\PersonGenerator.cs" />
+    <Compile Include="Generators\StrNumberGenerator.cs" />
     <Compile Include="MyCollections\MyQueue.cs" />
     <Compile Include="MyGenericCollections\MyGenericQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

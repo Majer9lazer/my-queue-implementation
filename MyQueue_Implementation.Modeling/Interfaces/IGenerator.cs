@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 namespace MyQueue_Implementation.Modeling.Interfaces
 {
     public interface IGenerator<out T>
-    {
-        T[] GenerateArray();
-        T GenerateSingle(int id);
+    { 
+        T[] GenerateArray(); 
+        
+        T GenerateSingle();
     }
 }
