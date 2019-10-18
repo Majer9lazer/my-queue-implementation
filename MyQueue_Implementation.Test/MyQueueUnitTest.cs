@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MyQueue_Implementation.Core.Generator;
 using MyQueue_Implementation.Core.MyCollections;
+using MyQueue_Implementation.Modeling.Interfaces;
 
 namespace MyQueue_Implementation.Test
 {
@@ -17,13 +18,15 @@ namespace MyQueue_Implementation.Test
             {
                 "+77777777", "+88888888", "+99999999","+1000000", "+3333333"
             };
-            MyQueue myQueue = new MyQueue();
-            PersonGenerator generator = new PersonGenerator();
-            Random _random = new Random();
+
+            var myQueue = new MyQueue();
+
+            IPersonGenerator generator = new PersonGenerator();
+            var random = new Random();
+
             for (int i = 0; i < phoneNumbers.Length; i++)
-            {
-                myQueue.Enqueue(generator.GenerateSingle(_random.Next(1, i + 1000)));
-            }
+                myQueue.Enqueue(generator.GenerateSingle(random.Next(1, i + 1000)));
+
             var aNElements = myQueue.GetNElements(input);
             Assert.AreEqual(3, aNElements.Length);
             Debug.WriteLine("Test passed successfully");

@@ -84,8 +84,8 @@ namespace MyQueue_Implementation
 
                         foreach (Person nPerson in firstNPersons)
                         {
-                            Console.WriteLine("Unique Id = {0} , Id = {1} , PhoneNumber = {2}",
-                                nPerson.UniqueId, nPerson.Id, nPerson.PhoneNumber);
+                            Console.WriteLine("[{0}]PhoneNumber = {1},Unique Id = {2}.",
+                                nPerson.Id, nPerson.PhoneNumber, nPerson.UniqueId);
                         }
                     }
                     else

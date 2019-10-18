@@ -3,7 +3,7 @@
 namespace MyQueue_Implementation.Modeling.MyEntities
 {
     /// <summary>
-    /// Класс описывающий обьект человека
+    /// Класс описывающий объект человека
     /// сделал sealed чтобы никто не наследовался на всякий случай
     /// </summary>
     public sealed class Person : IComparable

@@ -52,6 +52,7 @@
     <Compile Include="MyQueueUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MyGenericQueueUnitTest.cs" />
+    <Compile Include="StrNumberGeneratorUnitTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
