@@ -21,6 +21,7 @@ namespace MyQueue_Implementation.Core.Generators
         private readonly char _separator;
 
         private readonly int _numbersCount;
+
         private readonly StringBuilder _builder;
 
         /// <summary>
@@ -31,17 +32,15 @@ namespace MyQueue_Implementation.Core.Generators
         /// <param name="numbersCount"></param>
         public StrNumberGenerator(string format, char separator = '-', int numbersCount = 5)
         {
-            _format = format;
-            _separator = separator;
-
-            if (_format.GroupBy(g => g).Count() > 2)
+            if (format.GroupBy(g => g).Count() > 2)
             {
                 throw new FormatException($"Invalid {nameof(format)} = {format}. Right should be \"###-###-##-##\"");
             }
 
+            _format = format;
+            _separator = separator;
             _numbersCount = numbersCount;
             _builder = new StringBuilder(_format.Length);
-            _numbersCount = numbersCount;
         }
 
         public string GenerateByCustomFormat(string format, char separator = '#')
